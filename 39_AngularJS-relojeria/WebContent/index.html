@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="relojesApp">
+	<head>
+		<meta charset="utf-8">
+		<title>Relojería online</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+	</head>
+	<body ng-controller="relojesAppCtrl">
+		<div class="navbar navbar-inverse">
+			<a class="navbar-brand" href="#">Relojería Online</a>
+		</div>
+		<div ng-controller="listaRelojesAppCtrl" class="panel panel-default row">
+			<!-- botonera con marcas -->
+			<div class="col-xs-3">
+				<a ng-click="seleccionarMarca()" class="btn btn-default btn-lg btn-block">Inicio</a>
+				<a ng-repeat="marcaReloj in datos.relojes | orderBy:'marca' | noduplicados:'marca'"
+				class="btn btn-default btn-lg btn-block" ng-click="seleccionarMarca(marcaReloj)"
+				ng-class="resaltarMarca(marcaReloj)">{{ marcaReloj }}</a>
+			</div>
+			<!-- lista de relojes -->
+			<div class="col-xs-8">
+				<div class="form-group">
+					<label for="maxE">Relojes por página:</label>
+					<select class="form-control" id="maxE" ng-model="maxElementosString" ng-change="maxElementosToNumber()">
+						<option>2</option>
+						<option>3</option>
+						<option>5</option>
+						<option>10</option>
+					</select>
+				</div>
+				<!-- filtrar por marca y limitar cuantos se ven-->
+				<div class="well" ng-repeat="item in datos.relojes | filter:filtrarMarca | paginar:paginaSeleccionada:maxElementos">
+					<h3>
+						<strong>{{item.modelo}}</strong>
+						<span class="pull-right label label-primary">{{item.precio | currency}}</span>
+					</h3>
+					<div class="lead">{{item.descripcion}}</div>
+				</div>
+				<!-- paginación para ver solo 3 elementos -->
+				<div class="pull-right btn-group">
+					<a ng-repeat="pagina in datos.relojes | filter:filtrarMarca | numeroPaginas:maxElementos" ng-click="seleccionarPagina($index+1)"
+					class="btn btn-default" ng-class="resaltarPagina($index+1)">{{$index+1}}</a>
+				</div>
+			</div>
+		</div>
+		
+		
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.6.6/angular-locale_es-es.min.js"></script>
+		<!-- cargar primero el modulo -->
+		<script type="text/javascript" src="resources/scripts/module.js"></script>
+		<!-- cargar los datos -->
+		<script type="text/javascript" src="resources/scripts/almacen.js"></script>
+		<!-- luego los filtros -->
+		<script type="text/javascript" src="resources/scripts/filtros.js"></script>
+		<!-- funcionalidad -->
+		<script type="text/javascript" src="resources/scripts/productos.js"></script>
+	</body>
+</html>
